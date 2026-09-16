@@ -32,7 +32,7 @@ function jsonResponse(status: number, body: unknown) {
 beforeEach(() => {
   jest.restoreAllMocks();
   global.fetch = jest.fn();
-  useAuthStore.setState({ token: 'mock-jwt-token-agora', user: null, isAuthenticated: false });
+  useAuthStore.setState({ token: 'mock-jwt-token-eventopry', user: null, isAuthenticated: false });
 });
 
 describe('recordTicketPurchase', () => {
@@ -47,7 +47,7 @@ describe('recordTicketPurchase', () => {
     const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
     expect(url).toMatch(/\/api\/payments\/ticket$/);
     expect(init.method).toBe('POST');
-    expect(init.headers.Authorization).toBe('Bearer mock-jwt-token-agora');
+    expect(init.headers.Authorization).toBe('Bearer mock-jwt-token-eventopry');
     expect(JSON.parse(init.body)).toMatchObject({ eventId: 'evt-1', quantity: 2 });
     expect(result).toEqual({ ticketId: 'ticket-1', paymentId: basePayload.paymentId, status: 'confirmed' });
   });

@@ -1,6 +1,6 @@
 ---
 name: Feature Request
-about: Suggest a new feature or enhancement for Agora
+about: Suggest a new feature or enhancement for Eventopry
 title: "[Feature] "
 labels: enhancement
 assignees: ''

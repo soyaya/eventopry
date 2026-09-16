@@ -47,7 +47,7 @@ export interface Coordinates {
 }
 
 export interface VenueGeofence {
-  /** Must match an Agora event UUID. */
+  /** Must match an Eventopry event UUID. */
   eventId: string;
   latitude: number;
   longitude: number;
@@ -265,7 +265,7 @@ class LocationService {
       deferredUpdatesInterval: 60_000,
       deferredUpdatesDistance: 300,
       foregroundService: {
-        notificationTitle: 'Agora is tracking your location',
+        notificationTitle: 'Eventopry is tracking your location',
         notificationBody: 'Tap to check in when you arrive at the venue.',
         notificationColor: '#7C3AED',
       },

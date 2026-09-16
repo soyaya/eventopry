@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document summarizes the implementation of the garbage collection feature for old event data in the Agora Event Registry smart contract.
+This document summarizes the implementation of the garbage collection feature for old event data in the Eventopry Event Registry smart contract.
 
 ## Requirements Met
 

@@ -42,9 +42,9 @@ const organizerProfiles = [
   },
   {
     address: ORGANIZER_WALLETS.agoraBuilders,
-    displayName: "Agora Builders",
+    displayName: "Eventopry Builders",
     bio: "Networking and demo nights for the local ecosystem.",
-    avatarUrl: "/images/organizers/agora-builders.png",
+    avatarUrl: "/images/organizers/eventopry-builders.png",
     socials: { website: "https://agora.dev" },
   },
   {
@@ -80,7 +80,7 @@ const events = [
     startsAt: new Date("2026-03-01T17:00:00.000Z"), // past
     location: "Online",
     category: "Party",
-    organizerName: "Agora Builders",
+    organizerName: "Eventopry Builders",
     organizerWallet: ORGANIZER_WALLETS.agoraBuilders,
     imageUrl: "/images/event2.png",
     ticketPrice: 15,
@@ -111,7 +111,7 @@ const events = [
     startsAt: new Date("2026-09-12T16:00:00.000Z"), // future
     location: "Accra",
     category: "Music",
-    organizerName: "Agora Builders",
+    organizerName: "Eventopry Builders",
     organizerWallet: ORGANIZER_WALLETS.agoraBuilders,
     imageUrl: "/images/event2.png",
     ticketPrice: 40,
@@ -141,7 +141,7 @@ const events = [
     startsAt: new Date("2026-11-08T07:00:00.000Z"), // future
     location: "Kigali",
     category: "Sports",
-    organizerName: "Agora Builders",
+    organizerName: "Eventopry Builders",
     organizerWallet: ORGANIZER_WALLETS.agoraBuilders,
     imageUrl: "/images/event2.png",
     ticketPrice: 10,
@@ -187,7 +187,7 @@ const events = [
     startsAt: new Date("2026-12-05T08:00:00.000Z"), // future
     location: "Zanzibar",
     category: "Health",
-    organizerName: "Agora Builders",
+    organizerName: "Eventopry Builders",
     organizerWallet: ORGANIZER_WALLETS.agoraBuilders,
     imageUrl: "/images/event2.png",
     ticketPrice: 60,
