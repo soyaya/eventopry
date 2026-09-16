@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/nextjs";
+import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { EventCard } from "./event-card";
 
 const meta: Meta<typeof EventCard> = {
@@ -36,7 +36,7 @@ export const FreeEvent: Story = {
   args: {
     ...baseArgs,
     price: "free",
-    title: "Agora Community Hangout",
+    title: "Eventopry Community Hangout",
   },
 };
 

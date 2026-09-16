@@ -12,8 +12,8 @@ use axum::{
     extract::{Path, Query, State},
     http::HeaderMap,
     response::{IntoResponse, Response},
-    Json,
 };
+use crate::utils::extract::ValidatedJson;
 use sqlx::{PgPool, Postgres, QueryBuilder};
 use std::time::Duration;
 
@@ -209,6 +209,7 @@ fn validate_profile_deletion(active_upcoming_events: i64) -> Result<(), AppError
 
 /// Payload accepted by `PATCH /api/v1/profile`.
 #[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct PatchProfileRequest {
     #[serde(alias = "displayName")]
     pub display_name: Option<String>,
@@ -251,7 +252,7 @@ fn organizer_total_events_query() -> &'static str {
 pub async fn upsert_profile(
     State(mut state): State<ProfileState>,
     headers: HeaderMap,
-    Json(payload): Json<UpsertProfileRequest>,
+    ValidatedJson(payload): ValidatedJson<UpsertProfileRequest>,
 ) -> Response {
     // Authenticate
     let address = match extract_auth(&headers) {
@@ -320,7 +321,7 @@ pub async fn upsert_profile(
 pub async fn patch_profile(
     State(mut state): State<ProfileState>,
     headers: HeaderMap,
-    Json(payload): Json<PatchProfileRequest>,
+    ValidatedJson(payload): ValidatedJson<PatchProfileRequest>,
 ) -> Response {
     let address = match extract_auth(&headers) {
         Ok(a) => a,
@@ -757,6 +758,7 @@ pub async fn list_events_by_organizer(
             created_at: Some(last.created_at),
             minted_tickets: Some(last.minted_tickets),
             count_of_ratings: Some(last.count_of_ratings as i64),
+            min_ticket_price: Some(last.min_ticket_price),
         }) {
             Ok(c) => Some(c),
             Err(e) => {
@@ -1059,6 +1061,7 @@ mod tests {
         let params = CursorParams {
             limit: 10,
             cursor: None,
+            count: true,
         };
         let validated = params.validate();
         assert_eq!(validated.page_size(), 10);
@@ -1071,6 +1074,7 @@ mod tests {
         let params = CursorParams {
             limit: 5,
             cursor: Some("some-cursor-value".to_string()),
+            count: true,
         };
         let validated = params.validate();
         assert_eq!(validated.cursor.as_deref(), Some("some-cursor-value"));
@@ -1200,7 +1204,7 @@ pub async fn get_wallet_tickets(State(state): State<ProfileState>, headers: Head
 
     // Upcoming: soonest first (already ordered by query).
     // Past: most-recent first — reverse the chronological order.
-    past.sort_by(|a, b| b.event_start_time.cmp(&a.event_start_time));
+    past.sort_by_key(|b| std::cmp::Reverse(b.event_start_time));
 
     let response = WalletTicketsResponse { upcoming, past };
     success(response, "Wallet tickets retrieved successfully").into_response()

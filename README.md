@@ -1,12 +1,49 @@
-# <img src="apps/web/public/logo/agora%20logo.svg" alt="Agora Logo" width="50" /> Agora
+# <img src="apps/web/public/logo/eventopry%20logo.svg" alt="Eventopry Logo" width="50" /> Eventopry
 
 [![Chromatic](https://chromatic.com/badge?appCode=)](https://www.chromatic.com/)
 
 **Plan Events. Bring People Together. Grow Communities.**
 
-Agora is an event and ticketing platform built for organizers, creators, and communities to create events, sell tickets, and manage attendees with ease. Built on [Stellar](https://stellar.org), it enables fast, low-cost, borderless payments using USDC.
+Eventopry is a working event and ticketing platform — web app, mobile app, Rust backend, and
+Soroban smart contracts, all shipping together — for organizers, creators, and communities to
+create events, sell tickets, and manage attendees end to end. Built on [Stellar](https://stellar.org),
+it settles every ticket sale, resale, and payout in USDC instead of routing them through a card
+network.
 
 **Live Demo:** [https://agora-web-eta.vercel.app/](https://agora-web-eta.vercel.app/)
+
+## Why Stellar
+
+Ticketing has a payments problem: card fees eat into low-priced tickets, payouts to organizers
+take days, and cross-border events mean currency conversion on top of that. Stellar removes all
+three:
+
+- **USDC settlement** means an organizer's payout is the ticket price minus Eventopry's fee — not
+  minus a 3% card-network cut on top of that.
+- **Sub-5-second finality** lets a ticket purchase, a resale, and an organizer payout all confirm
+  before the buyer's checkout screen would even finish loading on a card processor.
+- **Borderless by default** — a buyer in one country and an organizer in another settle in the
+  same asset, no currency conversion step in between.
+- **Soroban smart contracts** ([`contract/`](contract/README.md)) hold ticket escrow, event
+  registry state, and the resale/pro-subscription logic on-chain, so ticket ownership and payout
+  rules aren't just application-database rows an operator could quietly edit.
+
+## Platform Capabilities
+
+This is a monorepo shipping four coordinated pieces:
+
+- **Web app** ([`apps/web`](apps/web/README.md)) — event creation and discovery (including an
+  interactive map), ticket checkout, a resale marketplace, organizer referral and affiliate
+  tracking, a subscriptions/Pro plan, and a help center localized in English, Spanish, and French.
+- **Mobile app** ([`apps/mobile`](apps/mobile)) — ticket checkout, an offline-capable QR ticket
+  scanner for gate staff, geofenced check-in, BLE mesh fallback for scanning without connectivity,
+  zero-knowledge proof generation for privacy-preserving ticket validation, and a staking flow for
+  organizer collateral.
+- **Backend** ([`server`](server/README.md)) — a Rust/Axum API that indexes on-chain events,
+  dispatches organizer webhooks, sends transactional email, and generates calendar (.ics) and PDF
+  ticket exports.
+- **Smart contracts** ([`contract`](contract/README.md)) — Soroban contracts for the event
+  registry, ticket payment/escrow, and Pro subscriptions.
 
 ## Features
 
@@ -18,6 +55,8 @@ Agora is an event and ticketing platform built for organizers, creators, and com
 ## Tech Stack
 
 - **Frontend**: Next.js, React, Tailwind CSS, Framer Motion.
+- **Mobile**: Expo / React Native.
+- **Backend**: Rust, Axum, SQLx (PostgreSQL), Redis.
 - **Blockchain**: Stellar Smart Contracts (Soroban).
 - **Package Manager**: pnpm.
 
@@ -57,8 +96,8 @@ This separation of concerns allows the backend to scale independently, supports 
 1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/your-username/agora.git
-   cd agora
+   git clone https://github.com/your-username/eventopry.git
+   cd eventopry
    ```
 
 2. **Install dependencies**:
@@ -74,7 +113,7 @@ This separation of concerns allows the backend to scale independently, supports 
 
 ## Design Resources
 
-- [**Figma Design File**](https://www.figma.com/design/cpRUhrSlBVxGElm18Fa2Uh/Agora-event?node-id=0-1&t=qBlO0jnjQHQaHn2Z-1)
+- [**Figma Design File**](https://www.figma.com/design/cpRUhrSlBVxGElm18Fa2Uh/Eventopry-event?node-id=0-1&t=qBlO0jnjQHQaHn2Z-1)
 
 ## Contributing
 
@@ -90,10 +129,17 @@ Please ensure your code follows the existing style guidelines (see [Frontend Gui
 
 **If you find this project useful, please give it a star! ⭐️**
 
+## Project Status
+
+Eventopry is under active, community-driven development. CI runs separate pipelines for
+[backend](.github/workflows/backend.yml), [frontend](.github/workflows/frontend.yml),
+[mobile](.github/workflows/mobile-ci.yml), and [contracts](.github/workflows/contracts.yml) on
+every push and pull request, alongside automated formatting checks and dependency updates.
+
 ## License
 
 Distributed under the MIT License. See [`LICENSE.md`](LICENSE.md) for more information.
 
 ---
 
-© 2026 Agora. All rights reserved.
+© 2026 Eventopry. All rights reserved.

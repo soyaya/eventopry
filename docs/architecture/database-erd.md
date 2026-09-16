@@ -1,7 +1,7 @@
 # Database Schema ERD
 
 ## Overview
-Agora Events uses a Prisma PostgreSQL schema with two primary entities:
+Eventopry Events uses a Prisma PostgreSQL schema with two primary entities:
 
 ### Event
 Represents hosted events on the platform.

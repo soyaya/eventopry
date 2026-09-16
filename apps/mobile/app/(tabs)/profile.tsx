@@ -11,6 +11,7 @@ import * as Clipboard from 'expo-clipboard';
 import Colors from '@/constants/Colors';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
+import AvatarEdit from '@/components/AvatarEdit';
 import { useAuth } from '@/hooks/useAuth';
 import { StellarWalletManager, StellarBalances } from '@/services/stellar';
 
@@ -127,12 +128,11 @@ export default function ProfileScreen() {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.profileHeader}>
-          <View style={styles.avatarPlaceholder}>
-            <Text style={styles.avatarText}>
-              {user?.name ? user.name.charAt(0).toUpperCase() : 'A'}
-            </Text>
-          </View>
-          <Text style={styles.nameText}>{user?.name || 'Agora User'}</Text>
+          <AvatarEdit 
+            onImageSelected={(uri) => console.log('New Avatar:', uri)} 
+            userName={user?.name ?? undefined}
+          />
+          <Text style={styles.nameText}>{user?.name || 'Eventopry User'}</Text>
           <Text style={styles.emailText}>{user?.email || 'user@agora.events'}</Text>
         </View>
 
@@ -142,7 +142,7 @@ export default function ProfileScreen() {
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>Stellar Address</Text>
             <Text style={styles.infoValue} numberOfLines={1} ellipsizeMode="middle">
-              {publicKey || user?.walletAddress || 'GDAGORA...'}
+              {publicKey || user?.walletAddress || 'GDEVENTOPRY...'}
             </Text>
           </View>
 
@@ -217,20 +217,6 @@ const styles = StyleSheet.create({
   profileHeader: {
     alignItems: 'center',
     marginTop: 20,
-  },
-  avatarPlaceholder: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-    backgroundColor: Colors.primaryYellow,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  avatarText: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: Colors.darkBackground,
   },
   nameText: {
     fontSize: 22,

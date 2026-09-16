@@ -16,9 +16,9 @@ export default function EventDetailsScreen() {
   const getEventTitle = (eventId: string) => {
     switch (eventId) {
       case '1': return 'Stellar Meridian 2026';
-      case '2': return 'Agora Blockchain Summit';
+      case '2': return 'Eventopry Blockchain Summit';
       case '3': return 'Decentralized Music Festival';
-      default: return 'Agora Event';
+      default: return 'Eventopry Event';
     }
   };
 
@@ -39,7 +39,7 @@ export default function EventDetailsScreen() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.heroPlaceholder}>
-        <Text style={styles.heroText}>AGORA EVENTS</Text>
+        <Text style={styles.heroText}>EVENTOPRY EVENTS</Text>
       </View>
 
       <View style={styles.detailsContainer}>
