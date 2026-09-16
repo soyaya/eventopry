@@ -15,7 +15,7 @@ import { Colors } from '@/constants/Colors';
 SplashScreen.preventAutoHideAsync();
 
 /**
- * Builds a react-navigation theme from the current Agora theme tokens.
+ * Builds a react-navigation theme from the current Eventopry theme tokens.
  * Re-runs whenever colorScheme changes so the navigator updates instantly.
  */
 function useAgoraNavTheme() {

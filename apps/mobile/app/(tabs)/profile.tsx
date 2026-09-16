@@ -132,7 +132,7 @@ export default function ProfileScreen() {
             onImageSelected={(uri) => console.log('New Avatar:', uri)} 
             userName={user?.name ?? undefined}
           />
-          <Text style={styles.nameText}>{user?.name || 'Agora User'}</Text>
+          <Text style={styles.nameText}>{user?.name || 'Eventopry User'}</Text>
           <Text style={styles.emailText}>{user?.email || 'user@agora.events'}</Text>
         </View>
 
@@ -142,7 +142,7 @@ export default function ProfileScreen() {
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>Stellar Address</Text>
             <Text style={styles.infoValue} numberOfLines={1} ellipsizeMode="middle">
-              {publicKey || user?.walletAddress || 'GDAGORA...'}
+              {publicKey || user?.walletAddress || 'GDEVENTOPRY...'}
             </Text>
           </View>
 

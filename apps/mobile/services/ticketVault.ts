@@ -24,10 +24,10 @@
  *
  * ## What is stored
  *
- * Key: `agora.vault.secret.<paymentId>`  (per-ticket, biometric-gated)
+ * Key: `eventopry.vault.secret.<paymentId>`  (per-ticket, biometric-gated)
  * Value: base64url-encoded raw 32-byte purchase secret
  *
- * Key: `agora.vault.pubkey.<paymentId>`  (per-ticket public key, no biometric needed)
+ * Key: `eventopry.vault.pubkey.<paymentId>`  (per-ticket public key, no biometric needed)
  * Value: base64url-encoded 32-byte Ed25519 public key (safe to read freely)
  *
  * The private key is never written to disk; it is re-derived from the secret
@@ -57,8 +57,8 @@ import { deriveTicketKeyPair, toBase64Url, fromBase64Url } from '../lib/crypto';
 
 // ── Key name helpers ──────────────────────────────────────────────────────────
 
-const SECRET_KEY_PREFIX = 'agora.vault.secret.';
-const PUBKEY_KEY_PREFIX = 'agora.vault.pubkey.';
+const SECRET_KEY_PREFIX = 'eventopry.vault.secret.';
+const PUBKEY_KEY_PREFIX = 'eventopry.vault.pubkey.';
 
 function secretStoreKey(paymentId: string): string {
   return `${SECRET_KEY_PREFIX}${paymentId}`;
