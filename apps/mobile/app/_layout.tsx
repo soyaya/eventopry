@@ -18,7 +18,7 @@ SplashScreen.preventAutoHideAsync();
  * Builds a react-navigation theme from the current Eventopry theme tokens.
  * Re-runs whenever colorScheme changes so the navigator updates instantly.
  */
-function useAgoraNavTheme() {
+function useEventopryNavTheme() {
   const { colorScheme } = useThemeContext();
 
   return useMemo(() => {
@@ -42,7 +42,7 @@ function AppNavigation() {
   const { isAuthenticated } = useAuth();
   const segments = useSegments();
   const router = useRouter();
-  const navTheme = useAgoraNavTheme();
+  const navTheme = useEventopryNavTheme();
   const { colorScheme } = useThemeContext();
 
   useEffect(() => {
