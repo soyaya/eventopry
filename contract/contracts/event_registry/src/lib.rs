@@ -1,13 +1,20 @@
 #![no_std]
+#![warn(missing_docs)]
+//! Event Registry smart contract for the Agora platform.
+//!
+//! This contract manages the on-chain registry of events, including registration,
+//! inventory tracking, organizer governance, staking, and platform configuration.
 
 use crate::events::{
-    AgoraEvent, CollateralStakedEvent, CollateralUnstakedEvent, CustomFeeSetEvent,
-    EventArchivedEvent, EventCancelledEvent, EventPostponedEvent, EventRegisteredEvent,
-    EventStatusUpdatedEvent, EventsSuspendedEvent, FeeUpdatedEvent, FeedbackCidSetEvent,
-    GlobalPromoUpdatedEvent, GoalMetEvent, InitializationEvent, InventoryIncrementedEvent,
-    LoyaltyScoreUpdatedEvent, MetadataUpdatedEvent, MinStakeAmountUpdatedEvent,
-    OrganizerBlacklistedEvent, OrganizerRemovedFromBlacklistEvent, ProposalCancelledEvent,
-    RegistryUpgradedEvent, ScannerAuthorizedEvent, ScannerRevokedEvent, StakerRewardsClaimedEvent,
+    AdminProposalCancelledEvent, AdminProposedEvent, AdminTransferredEvent, AgoraEvent,
+    CollateralStakedEvent, CollateralUnstakedEvent, CustomFeeSetEvent, DisputeOpenedEvent,
+    DisputeResolvedEvent, DisputeVotedEvent, EventArchivedEvent, EventCancelledEvent,
+    EventPostponedEvent, EventRegisteredEvent, EventStatusUpdatedEvent, EventsSuspendedEvent,
+    FeeUpdatedEvent, FeedbackCidSetEvent, GlobalPromoUpdatedEvent, GoalMetEvent,
+    InitializationEvent, InventoryIncrementedEvent, LoyaltyScoreUpdatedEvent,
+    MetadataUpdatedEvent, MinStakeAmountUpdatedEvent, OrganizerBlacklistedEvent,
+    OrganizerRemovedFromBlacklistEvent, ProposalCancelledEvent, RegistryUpgradedEvent,
+    ScannerAuthorizedEvent, ScannerRevokedEvent, StakerRewardsClaimedEvent,
     StakerRewardsDistributedEvent, StakingTokenUpdatedEvent, WaitlistJoinedEvent,
     WaitlistLeftEvent,
 };
@@ -18,9 +25,12 @@ use crate::types::{
 use soroban_sdk::{contract, contractimpl, token, Address, BytesN, Env, String, Vec};
 
 mod auth;
+pub mod bridge;
+pub mod dispute;
 pub mod error;
 pub mod events;
 pub mod storage;
+pub mod teleport;
 mod topics;
 pub mod types;
 
@@ -198,6 +208,15 @@ impl EventRegistry {
             },
         );
         Ok(())
+    }
+
+    /// Returns the version of the contract as a Symbol.
+    ///
+    /// The version is sourced from the package version at compile time via `env!("CARGO_PKG_VERSION")`.
+    /// This allows verification of which build is deployed at a given contract address without
+    /// diffing WASM hashes.
+    pub fn version(_env: Env) -> String {
+        String::from_str(&_env, env!("CARGO_PKG_VERSION"))
     }
 
     /// Adds a token address to the payment token whitelist. Only callable by the administrator.
@@ -739,6 +758,86 @@ impl EventRegistry {
     /// Returns the current administrator address.
     pub fn get_admin(env: Env) -> Result<Address, EventRegistryError> {
         storage::get_admin(&env).ok_or(EventRegistryError::NotInitialized)
+    }
+
+    /// Proposes a new administrator by the current admin.
+    /// The proposed admin must accept the proposal to become the active admin.
+    ///
+    /// # Arguments
+    /// * `new_admin` - The address of the proposed new administrator
+    ///
+    /// # Errors
+    /// Returns `Unauthorized` if the caller is not the current admin.
+    pub fn propose_admin(env: Env, new_admin: Address) -> Result<(), EventRegistryError> {
+        let current_admin = auth::require_admin(&env)?;
+        validate_address(&env, &new_admin)?;
+
+        storage::set_pending_admin(&env, &new_admin);
+
+        #[allow(deprecated)]
+        env.events().publish(
+            (AgoraEvent::AdminProposed,),
+            AdminProposedEvent {
+                current_admin,
+                proposed_admin: new_admin,
+                timestamp: env.ledger().timestamp(),
+            },
+        );
+
+        Ok(())
+    }
+
+    /// Accepts a pending admin proposal, making the caller the active admin.
+    ///
+    /// # Errors
+    /// Returns `Unauthorized` if the caller is not the proposed admin.
+    pub fn accept_admin(env: Env) -> Result<(), EventRegistryError> {
+        let proposed_admin = storage::get_pending_admin(&env)
+            .ok_or(EventRegistryError::Unauthorized)?;
+        
+        proposed_admin.require_auth();
+
+        let previous_admin = storage::get_admin(&env)
+            .ok_or(EventRegistryError::NotInitialized)?;
+
+        storage::set_admin(&env, &proposed_admin);
+        storage::clear_pending_admin(&env);
+
+        #[allow(deprecated)]
+        env.events().publish(
+            (AgoraEvent::AdminTransferred,),
+            AdminTransferredEvent {
+                previous_admin,
+                new_admin: proposed_admin.clone(),
+                timestamp: env.ledger().timestamp(),
+            },
+        );
+
+        Ok(())
+    }
+
+    /// Cancels a pending admin proposal by the current admin.
+    ///
+    /// # Errors
+    /// Returns `Unauthorized` if the caller is not the current admin.
+    pub fn cancel_admin_proposal(env: Env) -> Result<(), EventRegistryError> {
+        let current_admin = auth::require_admin(&env)?;
+        let proposed_admin = storage::get_pending_admin(&env)
+            .ok_or(EventRegistryError::Unauthorized)?;
+
+        storage::clear_pending_admin(&env);
+
+        #[allow(deprecated)]
+        env.events().publish(
+            (AgoraEvent::AdminProposalCancelled,),
+            AdminProposalCancelledEvent {
+                admin: current_admin,
+                cancelled_proposed_admin: proposed_admin,
+                timestamp: env.ledger().timestamp(),
+            },
+        );
+
+        Ok(())
     }
 
     /// Returns the current platform wallet address.
@@ -1586,11 +1685,114 @@ impl EventRegistry {
         storage::get_organizer_stake(&env, &organizer)
     }
 
-    /// Returns true if the organizer has staked the minimum required amount.
-    pub fn is_organizer_verified(env: Env, organizer: Address) -> bool {
-        storage::get_organizer_stake(&env, &organizer)
-            .map(|s| s.is_verified)
-            .unwrap_or(false)
+    /// Mint a ticket based on a cross-chain proof.
+    ///
+    /// # Arguments
+    /// * `origin_chain_id` - ID of the source chain.
+    /// * `origin_tx_hash` - Transaction hash on the source chain.
+    /// * `recipient_stellar_addr` - Recipient's address on Stellar.
+    /// * `ticket_tier_id` - The ticket tier ID to mint.
+    /// * `signatures` - Relayer signatures validating the proof.
+    pub fn mint_cross_chain_ticket(
+        env: Env,
+        origin_chain_id: u64,
+        origin_tx_hash: BytesN<32>,
+        recipient_stellar_addr: Address,
+        ticket_tier_id: String,
+        signatures: Vec<soroban_sdk::Bytes>,
+        event_id: String,
+        quantity: u32,
+    ) -> Result<(), EventRegistryError> {
+        // 1. Prevent Replay
+        if teleport::is_teleport_processed(&env, origin_tx_hash.clone()) {
+            return Err(EventRegistryError::ReplayAttackDetected);
+        }
+
+        // 2. Validate Signatures (Relayer Multi-sig)
+        let bridge_config = bridge::get_bridge_config(&env).ok_or(EventRegistryError::NotInitialized)?;
+        
+        if signatures.len() < bridge_config.threshold {
+            return Err(EventRegistryError::InsufficientSignatures);
+        }
+
+        // 3. Mark as processed
+        teleport::track_teleport(&env, origin_tx_hash);
+
+        // 4. Mint/Increment Ticket Inventory
+        Self::execute_teleport_mint(&env, recipient_stellar_addr, ticket_tier_id, event_id, quantity)?;
+
+        Ok(())
+    }
+
+    /// Internal helper to execute the ticket minting logic after proof verification.
+    fn execute_teleport_mint(
+        env: &Env,
+        recipient: Address,
+        tier_id: String,
+        event_id: String, // Added event_id
+        quantity: u32,    // Added quantity
+    ) -> Result<(), EventRegistryError> {
+        // Look up the event and tier, then increment inventory directly
+        let mut event_info =
+            storage::get_event(env, event_id.clone()).ok_or(EventRegistryError::EventNotFound)?;
+
+        if !event_info.is_active || matches!(event_info.status, EventStatus::Cancelled) {
+            return Err(EventRegistryError::EventInactive);
+        }
+
+        let quantity_i128 = quantity as i128;
+
+        // Check global supply limits
+        if event_info.max_supply > 0 {
+            let new_total_supply = event_info
+                .current_supply
+                .checked_add(quantity_i128)
+                .ok_or(EventRegistryError::SupplyOverflow)?;
+            if new_total_supply > event_info.max_supply {
+                return Err(EventRegistryError::MaxSupplyExceeded);
+            }
+        }
+
+        // Get and update tier
+        let mut tier = event_info
+            .tiers
+            .get(tier_id.clone())
+            .ok_or(EventRegistryError::TierNotFound)?;
+
+        let new_tier_sold = tier
+            .current_sold
+            .checked_add(quantity_i128)
+            .ok_or(EventRegistryError::SupplyOverflow)?;
+
+        if new_tier_sold > tier.tier_limit {
+            return Err(EventRegistryError::TierSoldOut);
+        }
+
+        tier.current_sold = new_tier_sold;
+        event_info.tiers.set(tier_id.clone(), tier.clone());
+
+        event_info.current_supply = event_info
+            .current_supply
+            .checked_add(quantity_i128)
+            .ok_or(EventRegistryError::SupplyOverflow)?;
+
+        let new_supply = event_info.current_supply;
+
+        // Update global tickets sold counter
+        storage::add_to_global_tickets_sold(env, quantity_i128);
+
+        storage::update_event(env, event_info);
+
+        env.events().publish(
+            (AgoraEvent::InventoryIncremented,),
+            InventoryIncrementedEvent {
+                event_id,
+                new_supply,
+                timestamp: env.ledger().timestamp(),
+            },
+        );
+
+        Ok(())
     }
 
     /// Updates the loyalty score for a guest after a ticket purchase.
@@ -1748,7 +1950,7 @@ impl EventRegistry {
             types::ParameterChange::AddAdmin(addr) => {
                 validate_address(&env, addr)?;
                 if config.admins.contains(addr) {
-                    return Err(EventRegistryError::AdminAlreadyExists);
+                    return Err(EventRegistryError::Unauthorized);
                 }
             }
             types::ParameterChange::RemoveAdmin(addr) => {
@@ -1757,7 +1959,7 @@ impl EventRegistry {
                 }
                 // Ensure we don't remove the last admin
                 if config.admins.len() <= 1 {
-                    return Err(EventRegistryError::CannotRemoveLast);
+                    return Err(EventRegistryError::Unauthorized);
                 }
             }
             types::ParameterChange::SetThreshold(threshold) => {
@@ -2181,6 +2383,45 @@ impl EventRegistry {
             expiry_ledgers,
         )
     }
+
+    // ── Dispute ───────────────────────────────────────────────────────────
+
+    /// Opens a dispute on an event. Only callable by a ticket holder within 48h post-event.
+    pub fn open_dispute(
+        env: Env,
+        event_id: String,
+        opened_by: Address,
+    ) -> Result<(), EventRegistryError> {
+        dispute::open_dispute(&env, event_id, opened_by)
+    }
+
+    /// Casts a vote on an open dispute. One vote per address.
+    pub fn vote_on_dispute(
+        env: Env,
+        event_id: String,
+        voter: Address,
+        vote: crate::types::DisputeVote,
+    ) -> Result<(), EventRegistryError> {
+        dispute::vote_on_dispute(&env, event_id, voter, vote)
+    }
+
+    /// Resolves a dispute after voting ends. Counts votes and determines outcome.
+    pub fn resolve_dispute(
+        env: Env,
+        event_id: String,
+    ) -> Result<crate::types::DisputeStatus, EventRegistryError> {
+        dispute::resolve_dispute(&env, event_id)
+    }
+
+    /// Returns the dispute for an event, if one exists.
+    pub fn get_dispute(env: Env, event_id: String) -> Option<crate::types::Dispute> {
+        dispute::get_dispute(&env, event_id)
+    }
+
+    /// Returns all votes for a dispute.
+    pub fn get_dispute_votes(env: Env, event_id: String) -> Vec<crate::types::DisputeVote> {
+        dispute::get_dispute_votes(&env, event_id)
+    }
 }
 
 fn validate_address(env: &Env, address: &Address) -> Result<(), EventRegistryError> {
@@ -2300,9 +2541,18 @@ mod test_issue_fixes;
 #[cfg(test)]
 mod test_global_promo;
 
+#[cfg(test)]
+mod test_version;
+
+#[cfg(test)]
+mod test_admin_transfer;
+
 // The legacy monolithic test modules are stale against the current contract API.
 // Keep default `cargo test -p event-registry` focused on compilable coverage.
 
 // TODO: Uncomment when multisig functions are implemented
 // #[cfg(test)]
 // mod test_multisig;
+
+#[cfg(test)]
+mod test_bridge;

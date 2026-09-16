@@ -52,8 +52,8 @@ beforeEach(() => {
     eventTitle: 'Stellar Meridian 2026',
   };
   mockUseAuth.mockReturnValue({
-    token: 'mock-jwt-token-agora',
-    user: { name: 'Agora User', email: 'user@example.com', walletAddress: 'GCLIENTWALLET' },
+    token: 'mock-jwt-token-eventopry',
+    user: { name: 'Eventopry User', email: 'user@example.com', walletAddress: 'GCLIENTWALLET' },
     isAuthenticated: true,
     login: jest.fn(),
     logout: jest.fn(),

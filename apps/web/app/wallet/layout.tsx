@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "My Wallet · Agora",
+  title: "My Wallet · Eventopry",
   description: "View your upcoming and past event tickets in one place.",
 };
 

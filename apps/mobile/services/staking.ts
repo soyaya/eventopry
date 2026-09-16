@@ -21,7 +21,7 @@ export const EVENT_REGISTRY_CONTRACT =
 // ── Public types ─────────────────────────────────────────────────────────────
 
 export interface StakingConfig {
-  /** Staking token — always USDC on the Agora testnet */
+  /** Staking token — always USDC on the Eventopry testnet */
   tokenAddress: string;
   /** Minimum collateral required (in USDC, decimal-adjusted) */
   minimumStake: number;
@@ -79,7 +79,7 @@ async function callContract(
   const fee = await server.fetchBaseFee();
 
   // Reference args in method invocation payload
-  const memoText = `agora:${method}:${Object.keys(args).length}`;
+  const memoText = `eventopry:${method}:${Object.keys(args).length}`;
 
   const tx = new TransactionBuilder(account, {
     fee: fee.toString(),

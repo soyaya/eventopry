@@ -3,6 +3,7 @@ pub mod auction;
 pub mod bonding_curve;
 pub mod contract;
 pub mod error;
+pub mod escrow;
 pub mod events;
 pub mod governance;
 pub mod interfaces;
@@ -17,3 +18,6 @@ mod test;
 
 #[cfg(test)]
 mod test_e2e;
+
+#[cfg(test)]
+mod test_version;

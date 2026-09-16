@@ -3,6 +3,7 @@ export type EventRecord = {
   title: string;
   description: string;
   startsAt: string;
+  endsAt?: string;
   location: string;
   category: string;
   organizerName: string;
@@ -19,6 +20,7 @@ type CreateEventInput = {
   title: string;
   description?: string;
   startsAt: string;
+  endsAt?: string;
   location: string;
   category: string;
   organizerName: string;
@@ -52,7 +54,7 @@ const eventsStore: EventRecord[] = [
     startsAt: "2026-03-01T17:00:00.000Z",
     location: "Online",
     category: "Party",
-    organizerName: "Agora Builders",
+    organizerName: "Eventopry Builders",
     organizerWallet: "GDBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
     imageUrl: "/images/event2.png",
     ticketPrice: 15,
@@ -92,6 +94,7 @@ export function createEvent(input: CreateEventInput, hostEmail: string): EventRe
     title: input.title,
     description: input.description || "",
     startsAt: input.startsAt,
+    endsAt: input.endsAt,
     location: input.location,
     category: input.category,
     organizerName: input.organizerName,

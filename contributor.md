@@ -1,6 +1,6 @@
-# Contributing to Agora
+# Contributing to Eventopry
 
-Welcome to Agora! We're building a payment solution on the Stellar network, and we're excited to have you contribute. This guide will help you understand what's expected and how to make meaningful contributions.
+Welcome to Eventopry! We're building a payment solution on the Stellar network, and we're excited to have you contribute. This guide will help you understand what's expected and how to make meaningful contributions.
 
 ## 📋 Before You Start
 
@@ -13,17 +13,26 @@ When applying for an issue:
 
 ### Project Structure
 ```
-Agora-stellr/
+Eventopry-stellr/
 ├── README.md
 ├── contract/      # Smart contracts
 └── frontend/ root      # User interface
 └── server/      # User interface
 ```
 
+### Code Ownership
+
+PRs are automatically routed for review based on [.github/CODEOWNERS](.github/CODEOWNERS):
+- `/apps/web/` → frontend maintainers
+- `/server/` → backend maintainers
+- `/contract/` → smart contract maintainers
+- `/docs/` and `*.md` → docs maintainers
+- Everything else falls back to the repo-wide owner.
+
 ## 🎨 Frontend Contributions
 
 ### Design Reference
-- **Figma Design**: [Agora Figma](https://www.figma.com/design/cpRUhrSlBVxGElm18Fa2Uh/Agora-event?node-id=0-1&t=qBlO0jnjQHQaHn2Z-1) 
+- **Figma Design**: [Eventopry Figma](https://www.figma.com/design/cpRUhrSlBVxGElm18Fa2Uh/Eventopry-event?node-id=0-1&t=qBlO0jnjQHQaHn2Z-1) 
 
 ### Standards and Best Practices
 - Follow professional frontend standards
@@ -64,8 +73,8 @@ Agora-stellr/
 
 ### 1. Fork and Clone
 ```bash
-git clone https://github.com/YOUR_USERNAME/Agora-stellr.git
-cd Agora
+git clone https://github.com/YOUR_USERNAME/Eventopry-stellr.git
+cd Eventopry
 ```
 
 ### 2. Create a Branch
@@ -109,7 +118,7 @@ If you encounter blockers or need clarification:
 
 ## 🎯 Our Mission
 
-Help us push Agora on the Stellar network fast by:
+Help us push Eventopry on the Stellar network fast by:
 - Writing clean, maintainable code
 - Following best practices and standards
 - Communicating effectively
@@ -118,7 +127,7 @@ Help us push Agora on the Stellar network fast by:
 
 ## 🌊 Let's Build Together
 
-Every contribution matters. Whether you're fixing a bug, adding a feature, or improving documentation, you're helping build something meaningful on Agora.
+Every contribution matters. Whether you're fixing a bug, adding a feature, or improving documentation, you're helping build something meaningful on Eventopry.
 
 **Questions?** Reach out to the maintainers in your draft PRs.
 

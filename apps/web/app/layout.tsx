@@ -7,7 +7,9 @@
 
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { Toaster } from "sonner";
+import { CookieBanner } from "@/components/layout/cookie-banner";
+import { LiveAnnouncer } from "@/components/ui/live-announcer";
+import { LocaleProvider } from "@/lib/i18n/locale-context";
 import "./globals.css";
 
 const inter = Inter({
@@ -18,13 +20,13 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL("https://agora.events"),
   title: {
-    template: "Agora | %s",
-    default: "Agora | Discover & Organize Events",
+    template: "Eventopry | %s",
+    default: "Eventopry | Discover & Organize Events",
   },
   description:
     "Discover, organize, and register for elite Web3 and Web2 events locally and globally.",
   openGraph: {
-    title: "Agora | Discover & Organize Events",
+    title: "Eventopry | Discover & Organize Events",
     description:
       "Discover, organize, and register for elite Web3 and Web2 events locally and globally.",
     images: [
@@ -32,7 +34,7 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Agora Events - Discover & Organize Events",
+        alt: "Eventopry Events - Discover & Organize Events",
       },
     ],
     type: "website",
@@ -50,16 +52,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" dir="ltr">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} antialiased`}>
-        <Suspense fallback={null}>
-          <LoadingBar />
-          <AttributionCapture />
-        </Suspense>
-        <Toaster position="bottom-right" richColors />
-        <ThemeProvider>
+        <a className="skip-link" href="#main-content">
+          Skip to main content
+        </a>
+        <LocaleProvider>
+          <LiveAnnouncer />
           {children}
-        </ThemeProvider>
+          <CookieBanner />
+        </LocaleProvider>
       </body>
     </html>
   );

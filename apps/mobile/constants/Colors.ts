@@ -1,5 +1,5 @@
 /**
- * Agora brand guide colors
+ * Eventopry brand guide colors
  */
 export const Colors = {
   primaryYellow: '#FDDA23',

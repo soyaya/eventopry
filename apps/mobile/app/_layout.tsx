@@ -8,16 +8,17 @@ import 'react-native-reanimated';
 import { ThemeProvider, useThemeContext } from '@/context/ThemeContext';
 import { useAuth } from '@/hooks/useAuth';
 import ErrorBoundary from '@/components/ui/ErrorBoundary';
+import AppStatusBar from '@/components/ui/AppStatusBar';
 import { Colors } from '@/constants/Colors';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 /**
- * Builds a react-navigation theme from the current Agora theme tokens.
+ * Builds a react-navigation theme from the current Eventopry theme tokens.
  * Re-runs whenever colorScheme changes so the navigator updates instantly.
  */
-function useAgoraNavTheme() {
+function useEventopryNavTheme() {
   const { colorScheme } = useThemeContext();
 
   return useMemo(() => {
@@ -41,7 +42,7 @@ function AppNavigation() {
   const { isAuthenticated } = useAuth();
   const segments = useSegments();
   const router = useRouter();
-  const navTheme = useAgoraNavTheme();
+  const navTheme = useEventopryNavTheme();
   const { colorScheme } = useThemeContext();
 
   useEffect(() => {
@@ -65,6 +66,7 @@ function AppNavigation() {
 
   return (
     <NavThemeProvider value={navTheme}>
+      <AppStatusBar />
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="auth" options={{ headerShown: false }} />
@@ -153,6 +155,24 @@ function AppNavigation() {
           name="organizer/staking"
           options={{
             title: 'Organizer Staking',
+            headerStyle,
+            headerTintColor,
+            headerShadowVisible: false,
+          }}
+        />
+        <Stack.Screen
+          name="organizer/dashboard"
+          options={{
+            title: 'Organizer Dashboard',
+            headerStyle,
+            headerTintColor,
+            headerShadowVisible: false,
+          }}
+        />
+        <Stack.Screen
+          name="organizer/qrScanner"
+          options={{
+            title: 'Gate Scanner',
             headerStyle,
             headerTintColor,
             headerShadowVisible: false,

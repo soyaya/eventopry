@@ -11,6 +11,7 @@ use std::sync::LazyLock;
 use std::time::Duration;
 
 use crate::cache::RedisCache;
+use crate::notifications::health::check_notifications_health;
 use crate::utils::error::AppError;
 use crate::utils::response::success;
 
@@ -64,6 +65,8 @@ struct HealthReadyResponse {
     status: &'static str,
     api: &'static str,
     database: &'static str,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    notifications: Option<crate::notifications::health::NotificationsHealth>,
 }
 
 #[derive(Serialize)]
@@ -149,15 +152,19 @@ pub async fn health_check_db(State(pool): State<PgPool>) -> Response {
 /// GET /health/ready – Readiness check.
 ///
 /// Returns 200 only when both the API process and the database are healthy.
+/// Includes per-provider notification health status without failing readiness.
 /// On failure the response uses [`AppError`] for a consistent error schema.
 pub async fn health_check_ready(State(pool): State<PgPool>) -> Response {
     let db_ok = sqlx::query("SELECT 1").fetch_one(&pool).await.is_ok();
 
     if db_ok {
+        let notifications_health = check_notifications_health().await;
+        
         let payload = HealthReadyResponse {
             status: "ready",
             api: "ok",
             database: "ok",
+            notifications: Some(notifications_health),
         };
         success(payload, "Service is ready").into_response()
     } else {
@@ -223,6 +230,37 @@ pub async fn health_check_blockchain() -> Response {
 struct HealthRedisResponse {
     status: &'static str,
     timestamp: String,
+}
+
+#[derive(Serialize, utoipa::ToSchema)]
+pub struct VersionResponse {
+    version: &'static str,
+    git_sha: &'static str,
+    built_at: &'static str,
+    rust_version: &'static str,
+}
+
+/// GET /version – Build metadata for the running deployment.
+///
+/// Reports the crate version, git commit SHA, build timestamp, and the rustc
+/// version used to compile the binary, captured at compile time by
+/// `build.rs`. The git SHA falls back to `"unknown"` when built outside a
+/// git checkout (e.g. a Docker build context with no `.git` directory).
+#[utoipa::path(
+    get,
+    path = "/version",
+    responses(
+        (status = 200, description = "Build version metadata", body = VersionResponse)
+    )
+)]
+pub async fn version() -> Response {
+    let payload = VersionResponse {
+        version: env!("CARGO_PKG_VERSION"),
+        git_sha: env!("GIT_SHA"),
+        built_at: env!("BUILT_AT"),
+        rust_version: env!("RUSTC_VERSION"),
+    };
+    success(payload, "Build version").into_response()
 }
 
 /// GET /health/redis – Redis connectivity check.
@@ -312,5 +350,28 @@ mod tests {
         assert_eq!(json["message"], "API is healthy");
         assert_eq!(json["data"]["status"], "ok");
         assert!(json["data"]["timestamp"].is_string());
+    }
+
+    #[tokio::test]
+    async fn test_version_endpoint_returns_200_with_non_empty_version() {
+        let router = Router::new().route("/version", get(version));
+
+        let req = Request::builder()
+            .uri("/version")
+            .body(Body::empty())
+            .unwrap();
+
+        let resp = router.oneshot(req).await.unwrap();
+
+        assert_eq!(resp.status(), StatusCode::OK);
+
+        let bytes = axum::body::to_bytes(resp.into_body(), usize::MAX)
+            .await
+            .unwrap();
+        let json: serde_json::Value = serde_json::from_slice(&bytes).unwrap();
+
+        assert_eq!(json["success"], true);
+        assert!(!json["data"]["version"].as_str().unwrap().is_empty());
+        assert!(!json["data"]["git_sha"].as_str().unwrap().is_empty());
     }
 }

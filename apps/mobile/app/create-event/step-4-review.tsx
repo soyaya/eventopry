@@ -263,7 +263,7 @@ export default function Step4Review() {
 
       Alert.alert(
         '🎉 Event Created!',
-        'Your event is now live on Agora.',
+        'Your event is now live on Eventopry.',
         [{ text: 'View Events', onPress: () => router.replace('/(tabs)/discover') }],
         { cancelable: false },
       );

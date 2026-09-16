@@ -79,7 +79,7 @@ export default function AuthScreen() {
         >
           <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
             <View style={styles.headerContainer}>
-              <Text style={styles.logoText}>AGORA</Text>
+              <Text style={styles.logoText}>EVENTOPRY</Text>
               <Text style={styles.subtitleText}>Decentralized Event Ticketing</Text>
             </View>
 

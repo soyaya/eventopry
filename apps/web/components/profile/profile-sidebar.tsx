@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import useSWR from "swr";
+import { UserInfoCard } from "@/components/profile/UserInfoCard";
 
 const socials = [
   { name: "Instagram", icon: "/icons/instagram.svg", href: "#" },
@@ -90,7 +91,7 @@ export function ProfileSidebar({ address = "me" }: { address?: string }) {
 
   const profile = data?.profile;
   const socialLinks = profile?.socials ?? {};
-  const displayName = profile?.displayName ?? "Agora Organizer";
+  const displayName = profile?.displayName ?? "Eventopry Organizer";
   const avatarUrl = profile?.avatarUrl || "/images/pfp.png";
   const joinedDate = profile?.createdAt
     ? new Intl.DateTimeFormat("en", { month: "long", year: "numeric" }).format(new Date(profile.createdAt))
@@ -98,21 +99,12 @@ export function ProfileSidebar({ address = "me" }: { address?: string }) {
 
   return (
     <aside className="bg-white rounded-2xl p-6 flex flex-col gap-6 shadow-sm border border-border-warm">
-      {/* Avatar */}
-      <div className="flex flex-col items-center gap-3">
-        <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-surface relative">
-          <Image
-            src={avatarUrl}
-            alt={`${displayName} profile photo`}
-            fill
-            className="object-cover"
-          />
-        </div>
-        <div className="text-center">
-          <h2 className="text-xl font-semibold text-ink-soft">{displayName}</h2>
-          <p className="text-sm text-gray-500">{profile?.bio || "Agora community member"}</p>
-        </div>
-      </div>
+      <UserInfoCard
+        displayName={displayName}
+        address={profile?.address ?? ""}
+        bio={profile?.bio}
+        avatarUrl={avatarUrl}
+      />
 
       {/* Joined Date */}
       <div className="flex items-center gap-2 text-sm text-gray-500">
