@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useState } from "react";
 
-const CREATE_EVENT_DRAFT_KEY = "agora:draft:create-event";
+const CREATE_EVENT_DRAFT_KEY = "eventopry:draft:create-event";
 
 // Description length constraint matches DB CHECK constraint
 export const MAX_DESCRIPTION_LENGTH = 10000;

@@ -31,7 +31,7 @@ export async function generateMetadata({
   return buildMetadata({
     title: event.title,
     description: truncateDescription(
-      `Join us for ${event.title} on ${event.date} in ${event.location}. ${event.price === "Free" ? "Free entry." : `Tickets from $${event.price}.`} Secure your spot on Agora.`
+      `Join us for ${event.title} on ${event.date} in ${event.location}. ${event.price === "Free" ? "Free entry." : `Tickets from $${event.price}.`} Secure your spot on Eventopry.`
     ),
     image: ogImageUrl,
     path: `/events/${id}`,
@@ -78,7 +78,7 @@ export default async function EventDetailPage({
 
   const isOnline = event.location === "Online";
   const eventUrl = `${SITE_URL}/events/${id}`;
-  const eventDescription = `Join us for ${event.title} on ${event.date} in ${event.location}. ${event.price === "Free" ? "Free entry." : `Tickets from $${event.price}.`} Secure your spot on Agora.`;
+  const eventDescription = `Join us for ${event.title} on ${event.date} in ${event.location}. ${event.price === "Free" ? "Free entry." : `Tickets from $${event.price}.`} Secure your spot on Eventopry.`;
   const parsedStartDate = new Date(event.date);
 
   const eventJsonLd = {

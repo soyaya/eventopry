@@ -137,7 +137,7 @@ export function ReferralSharingModal({
     }
     try {
       await navigator.share({
-        title: "Agora Events",
+        title: "Eventopry Events",
         text: shareText,
         url: referralUrl,
       });

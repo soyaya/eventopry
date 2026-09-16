@@ -44,7 +44,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
   const setLocale = useCallback((next: Locale) => {
     setLocaleState(next);
     try {
-      window.localStorage.setItem("agora.locale", next);
+      window.localStorage.setItem("eventopry.locale", next);
     } catch {
       // Persistence must never break the in-session switch.
     }

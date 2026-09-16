@@ -64,16 +64,16 @@ export function buildIcsFile(event: CalendarEventInput): string {
   const dtStamp = formatToUtcString(now);
   const dtStart = formatToUtcString(startDate);
   const dtEnd = formatToUtcString(endDate);
-  const uid = `${event.id ?? "agora-event"}-${startDate.getTime()}@agora.events`;
+  const uid = `${event.id ?? "eventopry-event"}-${startDate.getTime()}@agora.events`;
 
-  const summary = escapeIcsText(event.title || "Agora Event");
+  const summary = escapeIcsText(event.title || "Eventopry Event");
   const description = escapeIcsText(event.description || "");
   const location = escapeIcsText(event.location || "");
 
   const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//Agora//Event Calendar//EN",
+    "PRODID:-//Eventopry//Event Calendar//EN",
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
     "BEGIN:VEVENT",
@@ -105,7 +105,7 @@ export function buildGoogleCalendarUrl(event: CalendarEventInput): string {
 
   const params = new URLSearchParams({
     action: "TEMPLATE",
-    text: event.title || "Agora Event",
+    text: event.title || "Eventopry Event",
     dates: `${dtStart}/${dtEnd}`,
   });
 

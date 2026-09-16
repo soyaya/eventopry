@@ -91,7 +91,7 @@ export function ProfileSidebar({ address = "me" }: { address?: string }) {
 
   const profile = data?.profile;
   const socialLinks = profile?.socials ?? {};
-  const displayName = profile?.displayName ?? "Agora Organizer";
+  const displayName = profile?.displayName ?? "Eventopry Organizer";
   const avatarUrl = profile?.avatarUrl || "/images/pfp.png";
   const joinedDate = profile?.createdAt
     ? new Intl.DateTimeFormat("en", { month: "long", year: "numeric" }).format(new Date(profile.createdAt))

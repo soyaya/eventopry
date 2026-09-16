@@ -257,7 +257,7 @@ export function ReferralLinkGenerator({
         isOpen={shareModalOpen}
         onClose={() => setShareModalOpen(false)}
         referralUrl={generatedUrl}
-        shareText="Join me at this event on Agora Events! Get your ticket here:"
+        shareText="Join me at this event on Eventopry Events! Get your ticket here:"
       />
     </div>
   );

@@ -33,8 +33,8 @@ export function Footer() {
         {/* Left Column: Branding & Copyright */}
         <div className="flex flex-col gap-6">
           <Image
-            src="/logo/agora logo footer.svg"
-            alt="Agora Logo"
+            src="/logo/eventopry logo footer.svg"
+            alt="Eventopry Logo"
             width={180}
             height={54}
             className="w-auto h-12"
@@ -86,7 +86,7 @@ export function Footer() {
           <div className="flex flex-col gap-3">
             {/* Instagram */}
             <a
-              href="https://instagram.com/agora"
+              href="https://instagram.com/eventopry"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-300 hover:text-white hover:bg-white/5 px-3 py-1.5 -ml-3 rounded-md transition-all duration-200 flex items-center gap-2 group focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
@@ -97,7 +97,7 @@ export function Footer() {
 
             {/* X (Twitter) */}
             <a
-              href="https://x.com/agora"
+              href="https://x.com/eventopry"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-300 hover:text-white hover:bg-white/5 px-3 py-1.5 -ml-3 rounded-md transition-all duration-200 flex items-center gap-2 group focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"

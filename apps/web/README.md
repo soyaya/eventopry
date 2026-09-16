@@ -1,6 +1,6 @@
-# Agora Frontend
+# Eventopry Frontend
 
-Welcome to the **Agora** frontend codebase! We are excited to have you contribute. This guide will help you understand our components, style guidelines, and best practices to keep the codebase clean and consistent.
+Welcome to the **Eventopry** frontend codebase! We are excited to have you contribute. This guide will help you understand our components, style guidelines, and best practices to keep the codebase clean and consistent.
 
 ## 🎨 Design & Style Guidelines
 
@@ -72,4 +72,4 @@ These should be used in your page layouts (e.g., `app/page.tsx`) to maintain a c
 
 ---
 
-**Happy Coding!** We appreciate your help in making Agora amazing. If you have any questions, feel free to reach out!
+**Happy Coding!** We appreciate your help in making Eventopry amazing. If you have any questions, feel free to reach out!

@@ -21,7 +21,7 @@ export default function StellarPage() {
           />
           <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-6 italic">Powered by Stellar</h1>
           <p className="text-xl md:text-2xl text-gray-300 mb-10 max-w-2xl font-light">
-            Agora runs on the Stellar network, providing lightning-fast, ultra-low-cost, and secure transactions for global events.
+            Eventopry runs on the Stellar network, providing lightning-fast, ultra-low-cost, and secure transactions for global events.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Link href="/create-event">
@@ -69,9 +69,9 @@ export default function StellarPage() {
           <div className="flex-1 flex flex-col gap-10">
             {/* USDC Payments */}
             <div className="bg-white p-10 rounded-3xl border-2 border-black shadow-[-6px_6px_0_rgba(0,0,0,1)]">
-              <h2 className="text-3xl font-bold mb-6 italic">USDC on Agora</h2>
+              <h2 className="text-3xl font-bold mb-6 italic">USDC on Eventopry</h2>
               <p className="text-lg text-ink/80 mb-6">
-                All ticket purchases and payouts on Agora are processed in USDC on the Stellar network. USDC is a fully reserved stablecoin pegged to the US Dollar.
+                All ticket purchases and payouts on Eventopry are processed in USDC on the Stellar network. USDC is a fully reserved stablecoin pegged to the US Dollar.
               </p>
               <Link href="https://developers.stellar.org/docs" target="_blank">
                 <Button backgroundColor="bg-white" textColor="text-black" className="w-full justify-between items-center text-lg font-bold border-2">
@@ -84,7 +84,7 @@ export default function StellarPage() {
             <div className="bg-[#D5F7E8] p-10 rounded-3xl border-2 border-black shadow-[-6px_6px_0_rgba(0,0,0,1)]">
               <h2 className="text-3xl font-bold mb-6 italic">Wallet Setup</h2>
               <p className="text-lg text-ink/80 mb-6">
-                To interact with Agora, you&apos;ll need a Stellar-compatible wallet like Freighter or Lobstr. Connect your wallet to easily manage your tickets and events.
+                To interact with Eventopry, you&apos;ll need a Stellar-compatible wallet like Freighter or Lobstr. Connect your wallet to easily manage your tickets and events.
               </p>
               <a href="https://freighter.app" target="_blank" rel="noreferrer">
                 <Button variant="primary" className="w-full text-lg font-bold">
@@ -100,8 +100,8 @@ export default function StellarPage() {
           <h2 className="text-4xl font-bold mb-10 text-center italic">Frequently Asked Questions</h2>
           <div className="grid md:grid-cols-2 gap-8">
             <div className="bg-surface p-8 rounded-2xl border border-black shadow-[-4px_4px_0_rgba(0,0,0,1)]">
-              <h3 className="text-xl font-bold mb-3">Do I need cryptocurrency to use Agora?</h3>
-              <p className="text-ink/80">While Agora uses crypto rails behind the scenes, we make it easy to pay with stablecoins like USDC which are tied 1:1 to the US Dollar.</p>
+              <h3 className="text-xl font-bold mb-3">Do I need cryptocurrency to use Eventopry?</h3>
+              <p className="text-ink/80">While Eventopry uses crypto rails behind the scenes, we make it easy to pay with stablecoins like USDC which are tied 1:1 to the US Dollar.</p>
             </div>
             <div className="bg-surface p-8 rounded-2xl border border-black shadow-[-4px_4px_0_rgba(0,0,0,1)]">
               <h3 className="text-xl font-bold mb-3">How do I fund my wallet?</h3>
@@ -109,7 +109,7 @@ export default function StellarPage() {
             </div>
             <div className="bg-surface p-8 rounded-2xl border border-black shadow-[-4px_4px_0_rgba(0,0,0,1)]">
               <h3 className="text-xl font-bold mb-3">Are my tickets NFTs?</h3>
-              <p className="text-ink/80">Yes! Every ticket issued on Agora is a unique digital asset on the Stellar blockchain, ensuring authenticity and preventing fraud.</p>
+              <p className="text-ink/80">Yes! Every ticket issued on Eventopry is a unique digital asset on the Stellar blockchain, ensuring authenticity and preventing fraud.</p>
             </div>
             <div className="bg-surface p-8 rounded-2xl border border-black shadow-[-4px_4px_0_rgba(0,0,0,1)]">
               <h3 className="text-xl font-bold mb-3">What happens if an event is canceled?</h3>

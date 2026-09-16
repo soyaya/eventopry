@@ -48,8 +48,8 @@ export default function CardOnramp({ amountUsd, receivingAddress, onSuccess, onC
     <div className="flex flex-col gap-4">
       <p className="text-sm text-black/60">
         Pay with a credit or debit card. The onramp provider will convert your
-        fiat payment into USDC and deposit it into a Stellar wallet so Agora can
-        complete the purchase. No card details are processed by Agora's backend.
+        fiat payment into USDC and deposit it into a Stellar wallet so Eventopry can
+        complete the purchase. No card details are processed by Eventopry's backend.
       </p>
 
       <div className="flex gap-2">

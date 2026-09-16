@@ -54,7 +54,7 @@ const eventsStore: EventRecord[] = [
     startsAt: "2026-03-01T17:00:00.000Z",
     location: "Online",
     category: "Party",
-    organizerName: "Agora Builders",
+    organizerName: "Eventopry Builders",
     organizerWallet: "GDBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
     imageUrl: "/images/event2.png",
     ticketPrice: 15,
