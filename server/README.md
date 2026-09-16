@@ -1,6 +1,6 @@
-# Agora Backend Server
+# Eventopry Backend Server
 
-This directory contains the Rust backend for Agora Events. The server exposes a versioned HTTP API with Axum, persists data in PostgreSQL through SQLx, and uses Redis for cache-backed features.
+This directory contains the Rust backend for Eventopry Events. The server exposes a versioned HTTP API with Axum, persists data in PostgreSQL through SQLx, and uses Redis for cache-backed features.
 
 ## Tech Stack
 
@@ -72,7 +72,7 @@ Required variables:
 | | `INDEXER_WORKERS` | Yes | - | Number of concurrent worker threads for the indexer. | `4` |
 | | `RATES_PROVIDER_URL` | Yes | - | External provider URL for crypto/fiat exchange rates. | `https://api.coingecko.com...` |
 | **Notifications** | `EXPO_ACCESS_TOKEN` **[SECRET]** | Yes | - | Access token for Expo push notifications. | `ExponentPushToken[...]` |
-| **Storage (S3)** | `S3_BUCKET` | No | `""` | AWS S3 Bucket Name for asset uploads. | `agora-assets` |
+| **Storage (S3)** | `S3_BUCKET` | No | `""` | AWS S3 Bucket Name for asset uploads. | `eventopry-assets` |
 | | `S3_REGION` | No | `auto` | AWS S3 Region. | `us-east-1` |
 | | `S3_ACCESS_KEY_ID` **[SECRET]** | No | `""` | Access Key ID for S3. | `AKIAIOSFODNN7EXAMPLE` |
 | | `S3_SECRET_ACCESS_KEY` **[SECRET]**| No | `""` | Secret Access Key for S3. | `wJalrXUtnFEMI/K7MDENG/b...` |
@@ -96,7 +96,7 @@ cp .env.example .env
 Confirm that `DATABASE_URL` points at your local PostgreSQL database:
 
 ```text
-DATABASE_URL=postgres://user:password@localhost:5432/agora
+DATABASE_URL=postgres://user:password@localhost:5432/eventopry
 ```
 
 ### 2. Start PostgreSQL
@@ -111,7 +111,7 @@ This creates:
 
 - Host: `localhost`
 - Port: `5432`
-- Database: `agora`
+- Database: `eventopry`
 - Username: `user`
 - Password: `password`
 
@@ -122,7 +122,7 @@ If your Docker Compose command is the older standalone binary, use `docker-compo
 If Redis is not already running locally, start it with Docker:
 
 ```bash
-docker run --name agora_redis -p 6379:6379 -d redis:7
+docker run --name eventopry_redis -p 6379:6379 -d redis:7
 ```
 
 The default `REDIS_URL` is:
